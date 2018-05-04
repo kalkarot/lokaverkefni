@@ -1,9 +1,10 @@
-
 import pygame, sys
 
 from pygame.locals import *
 
 from random import *
+
+from random import randrange
 
 import math
 
@@ -41,16 +42,6 @@ WHITE = (255, 255, 255)
 
 RED = (255,   0,   0)
 
-
-class Food():
-    def __init__(self, startPos, width):
-        self.start = startPos
-
-        self.width = width
-
-        self.rect = pygame.Rect(self.start, (width, width))
-
-        self.color = (255, 0, 0)
 
 
 class Player():
@@ -143,7 +134,7 @@ class Object():
 
         self.width = 5
 
-        self.color = (255-int(math.fabs(self.rect.top-255)),255-int(math.fabs(self.rect.top-255)),255-int(math.fabs(self.rect.top-255)))
+        self.color = (0,0 , min(((randint(0,250)), 255)))
 
 
 
@@ -159,9 +150,7 @@ gravity = 4
 
 direction = ""
 
-player = Player((screen.get_width()/2, 0), 10)
-
-food = Food((screen.get_width()/2, 0), 10)
+player = Player((screen.get_width()/2, 0), 20)
 
 Ground = Object((-10,500),screen.get_width()+50, 5)
 
@@ -171,7 +160,7 @@ def generatePlatforms():
 
     global Ground
 
-    global platforms, platformColl, food
+    global platforms, platformColl
 
     platforms = [Ground]
 
@@ -197,17 +186,30 @@ def generatePlatforms():
 
 
 
-
-
 generatePlatforms()
 
+# list for kx and ky
+kx = []
+ky = []
 
+# random food ap
+for i in range(0, 5):
+    kx.append(random.randrange(0,90) * 10)
+    ky.append(random.randrange(0,50) * 10)
+
+# food
 
 
 
 while True:#Keyrir leikinn
 
     screen.fill(WHITE)
+
+
+
+    # boxes
+    for i in range(0, 5):
+        kassi = pygame.draw.rect(screen, RED, (kx[i], ky[i], 10, 10)) #kassi
 
 
 
@@ -228,7 +230,6 @@ while True:#Keyrir leikinn
             player.isJumping = False
 
     player.draw()
-
 
 
     if player.rect.collidelist(platformColl) >= 0:

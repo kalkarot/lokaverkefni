@@ -1,9 +1,10 @@
-
 import pygame, sys
 
 from pygame.locals import *
 
 from random import *
+
+import random
 
 import math
 
@@ -42,16 +43,6 @@ WHITE = (255, 255, 255)
 RED = (255,   0,   0)
 
 
-class Food():
-    def __init__(self, startPos, width):
-        self.start = startPos
-
-        self.width = width
-
-        self.rect = pygame.Rect(self.start, (width, width))
-
-        self.color = (255, 0, 0)
-
 
 class Player():
 
@@ -63,7 +54,7 @@ class Player():
 
         self.rect = pygame.Rect(self.start, (width, width))
 
-        self.color = (0, 255, 0)
+        self.color = (255, 0, 0)
 
         self.speed = 6
 
@@ -143,7 +134,7 @@ class Object():
 
         self.width = 5
 
-        self.color = (255-int(math.fabs(self.rect.top-255)),255-int(math.fabs(self.rect.top-255)),255-int(math.fabs(self.rect.top-255)))
+        self.color = (0,0 , min(((randint(0,250)), 255)))
 
 
 
@@ -159,24 +150,24 @@ gravity = 4
 
 direction = ""
 
-player = Player((screen.get_width()/2, 0), 10)
+x = 450
+y = 0
 
-food = Food((screen.get_width()/2, 0), 10)
+#player = Player((screen.get_width()/2, 0), 20)
+player = Player((x, y), 5)
 
 Ground = Object((-10,500),screen.get_width()+50, 5)
-
 
 
 def generatePlatforms():
 
     global Ground
 
-    global platforms, platformColl, food
+    global platforms, platformColl
 
     platforms = [Ground]
 
     platformColl = []
-
 
 
     for i in range(50,500, 50):
@@ -197,18 +188,65 @@ def generatePlatforms():
 
 
 
-
-
 generatePlatforms()
 
+def newBoxes():
+    global kassar
+    #kassar = [[x,y]]
+    kassar = []
+
+    for i in range(0,5):
+        kassar.append(pygame.Rect(randint(0,800),randint(0,400),10,10))
+
+newBoxes()
+# list for kx and ky
+kx = []
+ky = []
+
+# random food ap
+for i in range(0, 3):
+    kx.append(randint(0,800))
+    ky.append(randint(0,400))
+
+# food
+
+score = 0
+
+def stig(score):
+    WINDOWWIDTH = 900
+    BASICFONT = pygame.font.Font('freesansbold.ttf', 18)
+    scoreSurf = BASICFONT.render('Score: %s' % (score), True, RED)
+    scoreRect = scoreSurf.get_rect()
+    scoreRect.topleft = (WINDOWWIDTH - 120, 10)
+    screen.blit(scoreSurf, scoreRect)
 
 
+def takaKassa():
+    global kassar, player, score
+
+    for kassi in kassar:
+
+        #|-1| = 1
+        if (int(math.fabs(player.rect.x - kassi[0])) < 5) and (int(math.fabs(player.rect.y - kassi[1])) < 5):
+            #print(kassi)
+            kassar.remove(kassi)
+            score += 1
+
+    if kassar == []:
+        newBoxes()
 
 
 while True:#Keyrir leikinn
 
     screen.fill(WHITE)
 
+    stig(score)
+
+    for kassi in kassar:
+        pygame.draw.rect(screen, (0,255,255), kassi)
+
+    if player.rect.collidelist(kassar) >= 0:
+        takaKassa()
 
 
     if player.isFalling and not player.isJumping:
@@ -228,7 +266,6 @@ while True:#Keyrir leikinn
             player.isJumping = False
 
     player.draw()
-
 
 
     if player.rect.collidelist(platformColl) >= 0:

@@ -19,16 +19,16 @@ class Player:
         self.onGround=False
 def walls():
     DISPLAYSURF.fill(WHITE)
-    pygame.draw.line(DISPLAYSURF, BLACK, (50,350), (350,350), 5)
-    pygame.draw.line(DISPLAYSURF, BLACK, (50,350), (50,50), 5)
-    pygame.draw.line(DISPLAYSURF, BLACK, (50,50), (350,50), 5)
-    pygame.draw.line(DISPLAYSURF, BLACK, (350,50), (350,350), 5)
+    pygame.draw.line(DISPLAYSURF, BLACK, (50,350), (350,350), 5)#bottomwall
+    pygame.draw.line(DISPLAYSURF, BLACK, (50,350), (50,50), 5)#leftwall
+    pygame.draw.line(DISPLAYSURF, BLACK, (50,50), (350,50), 5)#rightwall
+    pygame.draw.line(DISPLAYSURF, BLACK, (350,50), (350,350), 5)#topwall
 #platforms
-    pygame.draw.line(DISPLAYSURF, BLACK, (200,250), (250,250), 5)
-    pygame.draw.line(DISPLAYSURF, BLACK, (100,150), (150,150), 5)
-    pygame.draw.line(DISPLAYSURF, BLACK, (250,300), (300,300), 5)
-    pygame.draw.line(DISPLAYSURF, BLACK, (240,200), (280,200), 5)
-    pygame.draw.line(DISPLAYSURF, BLACK, (200,150), (250,150), 5)
+    pygame.draw.line(DISPLAYSURF, BLACK, (200,250), (250,250), 5)#1
+    pygame.draw.line(DISPLAYSURF, BLACK, (100,150), (150,150), 5)#5
+    pygame.draw.line(DISPLAYSURF, BLACK, (250,300), (300,300), 5)#4
+    pygame.draw.line(DISPLAYSURF, BLACK, (240,200), (280,200), 5)#3
+    pygame.draw.line(DISPLAYSURF, BLACK, (200,150), (250,150), 5)#2
 def stig(score):
     WINDOWWIDTH = 400
     BASICFONT = pygame.font.Font('freesansbold.ttf', 18)
@@ -82,8 +82,8 @@ lx=[]
 ly=[]
 
 for i in range(0, 10):
-    kx.append (random.randrange(1,40) * 5)
-    ky.append (random.randrange(1,40) * 5)
+    kx.append (random.randrange(5,35) * 10)
+    ky.append (random.randrange(5,35) * 10)
 
 #x-ás, y-ás, x-radius, y-radius
 
@@ -92,7 +92,7 @@ score = 0
 
 lx.append(x)
 ly.append(y)
-
+falling = True
 
 #loopa sem keyrir leikinn
 while True:
@@ -101,10 +101,19 @@ while True:
     del lx[0]
     del ly[0]
 
-    
+    if x <= 50:
+        x += 10
+    elif x >= 340:
+        x -= 10
+    elif y <= 50:
+        y += 10
+    elif y >= 340:
+        y -= 60
+
     for i in range(0, 10):
         kassi = pygame.draw.rect(DISPLAYSURF, GREEN, (kx[i], ky[i], 10, 10)) #kassi
-        
+    if falling:
+        y += 3
     
     for event in pygame.event.get():
         if event.type == QUIT:
@@ -128,8 +137,8 @@ while True:
             lx.append(x)
             ly.append(y)
             score += 1
-            kx[i] = (random.randrange(1,40) * 10)
-            ky[i] = (random.randrange(1,40) * 10)
+            kx[i] = (random.randrange(5,35) * 10)
+            ky[i] = (random.randrange(5,35) * 10)
             FPS += 1.5
 
     pygame.draw.rect(DISPLAYSURF, litur, (x, y, 10, 10)) #kassi
