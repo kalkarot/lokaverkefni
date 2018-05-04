@@ -16,7 +16,7 @@ pygame.init()
 
 #WINDOW SETUP CONFIG
 
-winTitle = 'Samúel'
+winTitle = 'lokaverkefni Ants comback'
 
 winHeight = 600
 
